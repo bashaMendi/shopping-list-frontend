@@ -16,13 +16,11 @@ const ShoppingListsView = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const refresh = searchParams.get('refresh');
   const shoppingLists = useAppSelector((state: RootState) => state.shoppingLists.lists) as ShoppingList[];
   const status = useAppSelector((state) => state.shoppingLists.status);
   const error = useAppSelector((state) => state.shoppingLists.error);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [toastShown, setToastShown] = useState(false);
 
   // Fetch lists on first load or when query param is present
   useEffect(() => {
@@ -136,7 +134,7 @@ const ShoppingListsView = () => {
         <div className="container mt-4">
           {content}
         </div>
-        <ToastContainer rtl position="top-right" autoClose={2000} />
+        <ToastContainer rtl position="top-right" autoClose={2000} aria-label="toast-container" />
       </div>
       {/* Delete Confirmation Modal */}
       <div className={`modal fade${showDeleteModal ? ' show d-block' : ''}`} tabIndex={-1} role="dialog" style={showDeleteModal ? { background: 'rgba(0,0,0,0.5)' } : {}}>

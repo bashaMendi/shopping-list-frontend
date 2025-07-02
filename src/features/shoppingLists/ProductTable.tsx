@@ -31,7 +31,7 @@ const ProductTable: React.FC<ProductTableProps> = ({
           <div className="col-md-3" key={cat.id}>
             <div className="card mb-3">
               <div className="card-header text-center fw-bold">
-                {cat.name} <span className="text-secondary" style={{ fontSize: '0.95em' }}>(סה"כ: {totalInCategory})</span>
+                {cat.name} <span className="text-secondary" style={{ fontSize: '0.95em' }}>(סה&quot;כ: {totalInCategory})</span>
               </div>
               <ul className="list-group list-group-flush">
                 {productsByCategory[cat.id]?.map((p, idx) => (

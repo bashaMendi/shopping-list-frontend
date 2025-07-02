@@ -9,17 +9,11 @@ import ProductTable from '../../../features/shoppingLists/ProductTable';
 import BackButton from '../../../components/BackButton';
 import ErrorAlert from '../../../components/ErrorAlert';
 
-interface ApiProduct {
-  name: string;
-  category: string;
-  quantity: number;
-}
-
 export default function EditListPage() {
   const params = useParams();
   const router = useRouter();
   const [listName, setListName] = useState('');
-  const { categories, loading: loadingCategories, error: categoriesError, addCategory } = useCategories();
+  const { categories, error: categoriesError, addCategory } = useCategories();
   const [newCategory, setNewCategory] = useState('');
   const [productName, setProductName] = useState('');
   const [productCategory, setProductCategory] = useState('');
@@ -38,14 +32,13 @@ export default function EditListPage() {
       .then(res => res.json())
       .then((listRes) => {
         const tempExtraCategories: Category[] = [];
-        const productsFromServer = listRes.items.map((item: any) => {
+        const productsFromServer = listRes.items.map((item: { name: string; category: string; quantity: number; }) => {
           let cat = categories.find((c) => c.id === item.category || c.name === item.category);
           if (!cat) {
             cat = { id: item.category, name: item.category };
-            // Avoid duplicates
-            if (!tempExtraCategories.find(ec => ec.id === cat.id)) {
-              tempExtraCategories.push(cat);
-            }
+          }
+          if (!tempExtraCategories.find(ec => ec.id === cat.id)) {
+            tempExtraCategories.push(cat);
           }
           return {
             name: item.name,
@@ -118,13 +111,6 @@ export default function EditListPage() {
     setProducts(products => products.map((p, i) => i === idx ? { ...p, quantity: newQuantity } : p));
   };
 
-  // Group products by category (only categories with products)
-  const categoriesWithProducts = categories.filter(cat => products.some(p => p.categoryId === cat.id));
-  const productsByCategory = categoriesWithProducts.reduce((acc, cat) => {
-    acc[cat.id] = products.filter(p => p.categoryId === cat.id);
-    return acc;
-  }, {} as Record<string, Product[]>);
-
   // Total quantity
   const totalQuantity = products.reduce((sum, p) => sum + p.quantity, 0);
 
@@ -140,11 +126,7 @@ export default function EditListPage() {
     try {
       await updateShoppingList(params.id as string, {
         name: listName,
-        items: products.map(p => ({
-          name: p.name,
-          category: p.categoryId,
-          quantity: p.quantity
-        })),
+        items: products,
       });
       router.push('/?edited=1');
     } catch {

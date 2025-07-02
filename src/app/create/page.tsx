@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppDispatch } from '../../hooks/reduxHooks';
 import { resetStatus } from '../../features/shoppingLists/shoppingListsSlice';
@@ -13,7 +13,7 @@ import ErrorAlert from '../../components/ErrorAlert';
 
 export default function CreateListPage() {
   const [listName, setListName] = useState('');
-  const { categories, loading: loadingCategories, error: categoriesError, addCategory } = useCategories();
+  const { categories, error: categoriesError, addCategory } = useCategories();
   const [newCategory, setNewCategory] = useState('');
   const [productName, setProductName] = useState('');
   const [productCategory, setProductCategory] = useState('');
@@ -75,13 +75,6 @@ export default function CreateListPage() {
     setProducts(products.filter((_, i) => i !== idx));
   };
 
-  // Group products by category (only categories with products)
-  const categoriesWithProducts = categories.filter(cat => products.some(p => p.categoryId === cat.id));
-  const productsByCategory = categoriesWithProducts.reduce((acc, cat) => {
-    acc[cat.id] = products.filter(p => p.categoryId === cat.id);
-    return acc;
-  }, {} as Record<string, Product[]>);
-
   // Total quantity
   const totalQuantity = products.reduce((sum, p) => sum + p.quantity, 0);
 
@@ -97,11 +90,7 @@ export default function CreateListPage() {
     try {
       await createShoppingList({
         name: listName,
-        items: products.map(p => ({
-          name: p.name,
-          category: p.categoryId,
-          quantity: p.quantity
-        })),
+        items: products,
       });
       dispatch(resetStatus());
       router.push('/?created=1');
