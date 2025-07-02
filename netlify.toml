@@ -1,3 +1,8 @@
 [build]
   command = "npm run build"
   publish = ".next"
+
+[[redirects]]
+  from = "/api/*"
+  to = "https://shopping-list-backend-c2t6.onrender.com/api/:splat"
+  status = 200
