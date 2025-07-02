@@ -64,3 +64,18 @@ frontend/
 ## הערות
 - יש להפעיל גם את ה־backend במקביל.
 - כל הקוד וה־UI מותאמים לעברית ו־RTL.
+
+## פיתוח לוקאלי (Local Development)
+
+כדי שה-frontend יוכל לדבר עם ה-backend שלך בסביבת פיתוח:
+1. ודא שה-backend שלך רץ על http://localhost:3001 (או פורט אחר שתבחר).
+2. צור קובץ בשם `.env.local` בתיקיית הפרויקט והוסף בו:
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:3001/api
+```
+
+3. הפעל את ה-frontend כרגיל (`npm run dev`).
+
+### Production (Netlify)
+בפרודקשן אין צורך במשתנה סביבה. הקריאות ילכו ל-/api ו-Netlify תעשה proxy אוטומטי לשרת שלך ב-Render לפי ההגדרה ב-netlify.toml.

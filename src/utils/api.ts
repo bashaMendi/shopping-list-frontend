@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { ShoppingList, Category, Product } from '../types';
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || '/api';
 
 export async function fetchShoppingLists(): Promise<ShoppingList[]> {
   const res = await axios.get(`${API_BASE}/shopping-lists`);
